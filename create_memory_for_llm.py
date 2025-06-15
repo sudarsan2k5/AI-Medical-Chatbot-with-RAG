@@ -1,5 +1,7 @@
 from langchain_community.document_loaders import PyPDFLoader, DirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.vectorstores import FAISS
 
 # Step 1: Load Raw PDF(f)
 DATA_PATH = 'data/'
@@ -36,6 +38,11 @@ print(len(chunks))
 
 
 # Step 3: Create Vector Embeddings
+
+def get_emmbedding_model():
+    embedding_model = HuggingFaceEmbeddings(
+        model_name = 'sentence-transformers/all-mpnet-base-v2'
+    )
+    return embedding_model
+embedding_model = get_emmbedding_model()
 # Step 4: Store Embedding in FAISS
-
-
