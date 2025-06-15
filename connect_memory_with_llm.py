@@ -18,3 +18,19 @@ def load_llm(huggingface_repo_id):
     )
     return llm
 # Step 2: Connect LLm With FAISS and create Chain
+DB_FAISS_PATH = 'vectorstore/bd_faiss'
+
+custom_prompt_templet = """
+    Use the pieces of information provided in the context to answer user's question.
+    If you don'd know the answer, just say that you don't know, don't try u[ an answer.
+    Don't provide anything out of the given context
+
+    contect: {context}
+    Question: {question}
+
+    Start the answer directly. no small talk please
+"""
+
+def set_custom_prompt(custom_prompt_templet):
+    prompt = PromptTemplate(template = custom_prompt_templet, input_variables = ["context", "question"])
+    return prompt
