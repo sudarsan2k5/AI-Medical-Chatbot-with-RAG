@@ -2,6 +2,9 @@ from langchain_community.document_loaders import PyPDFLoader, DirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Step 1: Load Raw PDF(f)
 DATA_PATH = 'data/'
@@ -15,7 +18,7 @@ def load_pdf_files(data):
     return documents
 
 documents = load_pdf_files(data = DATA_PATH)
-print(len(documents))
+# print(len(documents))
 # ---------- Load PDF --------
 
 
@@ -31,8 +34,8 @@ def create_chunks(documents):
     text_chunks = text_splitter.split_documents(documents)
     return text_chunks
 
-chunks = create_chunks(documents)
-print(len(chunks))
+text_chunks = create_chunks(documents)
+# print(len(chunks))
 
 # ------------- PDF Chunking -----------------
 
@@ -45,4 +48,9 @@ def get_emmbedding_model():
     )
     return embedding_model
 embedding_model = get_emmbedding_model()
+
 # Step 4: Store Embedding in FAISS
+
+DB_FAISS_PATH = 'vectorstore/db_faiss'
+db = FAISS.from_documents(text_chunks, embedding_model)
+db.save_local(DB_FAISS_PATH)
