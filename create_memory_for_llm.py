@@ -18,6 +18,23 @@ print(len(documents))
 
 
 # Step 2: Create Chunks
+
+# ------------- PDF Chunking -----------------
+def create_chunks(documents):
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size = 500,
+        chunk_overlap = 50
+    )
+
+    text_chunks = text_splitter.split_documents(documents)
+    return text_chunks
+
+chunks = create_chunks(documents)
+print(len(chunks))
+
+# ------------- PDF Chunking -----------------
+
+
 # Step 3: Create Vector Embeddings
 # Step 4: Store Embedding in FAISS
 
