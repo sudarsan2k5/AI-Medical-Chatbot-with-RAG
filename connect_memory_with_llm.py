@@ -18,14 +18,28 @@ load_dotenv()
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
-def load_llm():
-    return ChatOpenAI(
-        openai_api_key=os.getenv("OPENAI_API_KEY"),
-        model="gpt-3.5-turbo",  # or "gpt-4" if you have access
+# Step 1: Setup LLM (Mistral with HuggingFace)
+huggingface_repo_id = 'mistralai/Mistral-7B-Instruct-v0.1'
+
+def load_llm(huggingface_repo_id):
+    llm = HuggingFaceEndpoint(
+        model = huggingface_repo_id,
         temperature=0.5,
-        
-        max_tokens=517
+        model_kwargs={"token": os.getenv('HF_TOKEN'), "max_new_tokens": 512}
     )
+    return llm
+
+
+
+
+# def load_llm():
+#     return ChatOpenAI(
+#         openai_api_key=os.getenv("OPENAI_API_KEY"),
+#         model="gpt-3.5-turbo",  # or "gpt-4" if you have access
+#         temperature=0.5,
+        
+#         max_tokens=517
+#     )
 
 # Step 2: Connect LLm With FAISS and create Chain
 
@@ -54,7 +68,7 @@ db = FAISS.load_local(
     )
 
 question_answer_chain = create_stuff_documents_chain(
-    load_llm(),
+    load_llm(huggingface_repo_id),
     prompt
 )
 
